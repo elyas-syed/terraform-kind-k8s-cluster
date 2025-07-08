@@ -4,3 +4,4 @@ module "kind_cluster" {
   cluster_name = "terraform-kind-cluster"
   config_path  = "../kind/kind-config.yaml"
 }
+
