@@ -1,11 +1,10 @@
 output "kind_cluster_summary" {
   description = "Summary of the Kind cluster setup"
-  value       = <<EOF
+  value       = <<EOT
 ******************************* KIND CLUSTER CREATED ********************************
 
   Cluster Name        :  ${module.kind_cluster.cluster_name}
   Kubectl Context     :  kind-${module.kind_cluster.cluster_name}
-  Config File Used    :  ${module.kind_cluster.config_path}
   Success Message     :  ${module.kind_cluster.success_message}
 
 *************************** NEXT STEPS TO VERIFY CLUSTER ****************************
@@ -20,5 +19,5 @@ output "kind_cluster_summary" {
     kubectl get nodes
 
 **************************** END OF CLUSTER SUMMARY *********************************
-EOF
+EOT
 }
