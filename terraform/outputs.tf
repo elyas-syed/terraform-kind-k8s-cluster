@@ -1,24 +1,24 @@
-output "cluster_name" {
-  description = "The name of the created Kind cluster"
-  value       = module.kind_cluster.cluster_name
-}
+output "kind_cluster_summary" {
+  description = "Summary of the Kind cluster setup"
+  value = <<EOF
+******************************* KIND CLUSTER CREATED ********************************
 
-output "cluster_config_path" {
-  description = "The path to the Kind cluster configuration file used"
-  value       = module.kind_cluster.config_path
-}
+  Cluster Name        :  ${module.kind_cluster.cluster_name}
+  Kubectl Context     :  kind-${module.kind_cluster.cluster_name}
+  Config File Used    :  ${module.kind_cluster.config_path}
+  Success Message     :  ${module.kind_cluster.success_message}
 
-output "kubectl_context" {
-  description = "The kubectl context name for the cluster"
-  value       = module.kind_cluster.kubectl_context
-}
+*************************** NEXT STEPS TO VERIFY CLUSTER ****************************
 
-output "success_message" {
-  description = "Confirmation that the Kind cluster was created"
-  value       = module.kind_cluster.success_message
-}
+  Set kubectl context:
+    kubectl config use-context kind-${module.kind_cluster.cluster_name}
 
-output "kubeconfig_path" {
-  description = "The path to the kubeconfig file for the Kind cluster"
-  value       = module.kind_cluster.kubeconfig_path
+  View cluster info:
+    kubectl cluster-info --context kind-${module.kind_cluster.cluster_name}
+
+  View cluster nodes:
+    kubectl get nodes
+
+**************************** END OF CLUSTER SUMMARY *********************************
+EOF
 }

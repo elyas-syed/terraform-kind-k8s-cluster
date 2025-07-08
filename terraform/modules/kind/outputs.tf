@@ -17,7 +17,5 @@ output "success_message" {
   description = "Confirmation that the Kind cluster was created"
   value       = "Kind cluster named '${var.cluster_name}' has been created successfully!"
 }
-output "kubeconfig_path" {
-  description = "The path to the kubeconfig file for the Kind cluster"
-  value       = "${path.module}/kubeconfig-${var.cluster_name}"
-}
+
+
