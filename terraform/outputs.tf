@@ -1,6 +1,6 @@
 output "kind_cluster_summary" {
   description = "Summary of the Kind cluster setup"
-  value = <<EOF
+  value       = <<EOF
 ******************************* KIND CLUSTER CREATED ********************************
 
   Cluster Name        :  ${module.kind_cluster.cluster_name}
