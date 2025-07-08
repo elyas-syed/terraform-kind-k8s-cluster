@@ -8,3 +8,7 @@ terraform {
     }
   }
 }
+
+provider "null" {
+  # No specific configuration needed for the null provider
+}
