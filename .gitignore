@@ -35,3 +35,34 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Kubernetes
+kubeconfig*
+.kube/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+.env
+.env.local
+
+# Logs
+*.log
+
+# Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with go test -c
+*.test
+
+# Output of the go coverage tool
+*.out
