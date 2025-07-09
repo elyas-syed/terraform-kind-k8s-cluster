@@ -6,17 +6,17 @@ terraform {
       source  = "hashicorp/null"
       version = ">= 3.0"
     }
-    
+
     kind = {
       source  = "tehcyx/kind"
       version = ">= 0.4.0"
     }
-    
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.21.1"
     }
-    
+
     helm = {
       source  = "hashicorp/helm"
       version = ">= 2.7.1"
@@ -25,7 +25,7 @@ terraform {
 }
 
 
-provider "kind" {  
+provider "kind" {
 }
 
 provider "kubernetes" {
