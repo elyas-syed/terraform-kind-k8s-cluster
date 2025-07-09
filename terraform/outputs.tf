@@ -11,11 +11,11 @@ output "kind_cluster_summary" {
 
 *************************** NEXT STEPS TO VERIFY CLUSTER ****************************
 
-  Set kubectl context:
-    kubectl config use-context ${module.kind_cluster.kubectl_context}
-
   View cluster info:
     kubectl cluster-info --context ${module.kind_cluster.kubectl_context}
+  
+  Set kubectl context:
+    kubectl config use-context ${module.kind_cluster.kubectl_context}
 
   View cluster nodes:
     kubectl get nodes
