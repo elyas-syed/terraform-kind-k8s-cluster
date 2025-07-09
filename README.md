@@ -4,15 +4,12 @@
 
 This project provides a complete Terraform configuration to create and manage a local Kubernetes cluster using Kind (Kubernetes in Docker). It's designed for developers who need a lightweight, reproducible Kubernetes environment for development and testing purposes.
 
-The setup includes an NGINX Ingress Controller for flexible routing and service exposure, making it easy to access deployed applications from your local machine with production-like ingress configurations.
-
 ## Architecture
 
 The project creates a Kind cluster with the following components:
 
 - **Terraform modules**: Modular approach for better maintainability and reusability
 - **Kind cluster**: Local Kubernetes cluster running in Docker containers
-- **NGINX Ingress Controller**: Production-grade ingress controller for flexible traffic routing
 - **Port mapping configuration**: Direct port mapping from container to host for easy service access
 - **NGINX example deployment**: Sample application to verify the cluster functionality
 
@@ -75,8 +72,6 @@ The Kind cluster configuration is defined in `kind/kind-config.yaml`. The cluste
   - 2 worker nodes (run your workloads)
 
 - **Port Mapping Configuration**:
-  - Container port 80 mapped to host port 80 (HTTP for Ingress)
-  - Container port 443 mapped to host port 443 (HTTPS for Ingress)
   - Container port 30001 mapped to host port 30001 (for NodePort services)
   - Protocol: TCP
   - This allows direct access to services from your local machine
@@ -86,8 +81,8 @@ The Kind cluster configuration is defined in `kind/kind-config.yaml`. The cluste
 The project uses a modular Terraform structure:
 
 - **Root Module**: Defines the overall infrastructure
-  - `main.tf`: References the Kind and NGINX Ingress modules
-  - `providers.tf`: Configures required providers (Kind, Kubernetes, Helm)
+  - `main.tf`: References the Kind module
+  - `providers.tf`: Configures required providers (Kind, Kubernetes)
   - `outputs.tf`: Defines outputs from the deployment
 
 - **Kind Module**: Encapsulates Kind cluster creation logic
@@ -95,16 +90,11 @@ The project uses a modular Terraform structure:
   - Uses the tehcyx/kind provider for native Terraform integration
   - Handles cluster creation, configuration, and destruction
 
-- **NGINX Ingress Module**: Manages the NGINX Ingress Controller
-  - Located in `terraform/modules/nginx-ingress/`
-  - Uses Helm provider to deploy the NGINX Ingress Controller
-  - Configures the controller for the Kind environment
-
 ## Deploying NGINX
 
-The project includes sample NGINX deployments to verify the cluster functionality:
+The project includes a sample NGINX deployment to verify the cluster functionality:
 
-### Using NodePort (Legacy Method)
+### Using NodePort
 
 1. Deploy the NGINX application and service:
    ```bash
@@ -123,33 +113,15 @@ The project includes sample NGINX deployments to verify the cluster functionalit
    ```
    You should see `nginx-service` of type `NodePort` with port mapping `80:30001/TCP`.
 
-### Using Ingress (Recommended Method)
-
-```bash
-# Apply the NGINX deployment, service, and Ingress resource
-kubectl apply -f manifests/nginx-ingress-example.yaml
-
-# Verify the deployment
-kubectl get pods
-kubectl get services
-kubectl get ingress
-
-# Access NGINX from your browser
-open http://localhost/nginx
-```
-
 ## Accessing Services
 
-You can access the NGINX deployments through:
+You can access the NGINX deployment through:
 
 - NodePort method: http://localhost:30001
-- Ingress method: http://localhost/nginx
 
 The NodePort 30001 is configured in both:
 - The Kind cluster configuration (host port mapping in `kind-config.yaml`)
 - The NGINX service configuration (Kubernetes service NodePort in `nginx-deployment.yaml`)
-
-The NGINX Ingress Controller provides a more flexible and production-like way to expose services, allowing path-based routing and hostname-based virtual hosting.
 
 ## Troubleshooting
 
@@ -169,13 +141,6 @@ The NGINX Ingress Controller provides a more flexible and production-like way to
    - Run `terraform init` again to ensure all providers are properly installed
    - Check Terraform and provider versions
 
-4. **Ingress Controller issues**:
-   - Ensure ports 80, 443 are not already in use by another application
-   - Check if the NGINX Ingress Controller pods are running: `kubectl get pods -n ingress-nginx`
-   - Verify Ingress resources: `kubectl get ingress -A`
-   - Check Ingress Controller logs: `kubectl logs -n ingress-nginx deployment/ingress-nginx-controller`
-   - Verify the service configuration: `kubectl get services -A`
-
 ## Extending the Project
 
 You can extend this project in several ways:
@@ -184,97 +149,8 @@ You can extend this project in several ways:
 2. **Customize the cluster**: Modify `kind-config.yaml` to change node count or port mappings
 3. **Add persistent storage**: Configure persistent volumes for stateful applications
 4. **Implement CI/CD**: Add GitHub Actions or other CI/CD tools to automate deployments
-5. **Customize Ingress Controller**: Modify the NGINX Ingress Controller configuration for advanced use cases:
-   - TLS termination
-   - Rate limiting
-   - Authentication
-   - Custom headers
-   - Rewrite rules
-6. **Implement multiple Ingress classes**: Deploy different Ingress controllers for different use cases
-
-## Using the NGINX Ingress Controller
-
-### Basic Ingress Configuration
-
-The project includes an example Ingress resource in `manifests/nginx-ingress-example.yaml`. Here's how to use it:
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nginx-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /nginx
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx-service
-            port:
-              number: 80
-```
-
-### Common Ingress Configurations
-
-#### TLS Configuration
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: tls-example
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  tls:
-  - hosts:
-    - example.local
-    secretName: example-tls
-  rules:
-  - host: example.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: example-service
-            port:
-              number: 80
-```
-
-#### Multiple Path Rules
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: multi-path-example
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 80
-      - path: /web
-        pathType: Prefix
-        backend:
-          service:
-            name: web-service
-            port:
-              number: 80
-```
+5. **Add Ingress Controllers**: Deploy Ingress controllers for advanced routing capabilities
+6. **Add monitoring solutions**: Implement monitoring and observability tools
 
 ## License
 
