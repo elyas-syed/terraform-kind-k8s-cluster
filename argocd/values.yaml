@@ -1,0 +1,9 @@
+# Minimal custom values for Argo CD
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    type: NodePort
+    nodePortHttp: 30020
